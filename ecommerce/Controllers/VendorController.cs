@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ecommerce.Controllers {
-    [Route("api/[vendor]")]
+    [Route("api/vendor")]
     [ApiController]
     public class VendorController : ControllerBase {
 
@@ -21,13 +21,17 @@ namespace ecommerce.Controllers {
                 return BadRequest(ModelState);
             }
 
-            var vendor = _vendorService.CreateVendor(vendorDTO);
+            Vendor vendor = await _vendorService.CreateVendor(vendorDTO);
+
+            if (vendor == null) {
+                return Conflict(new { message = "O e-mail informado já está em uso. Por favor, escolha outro." });
+            }
 
             return CreatedAtAction(nameof(GetVendorById), new { id = vendor.Id }, vendor);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Vendor>> GetVendorById(int id) {
+        public async Task<ActionResult<Vendor>> GetVendorById(long id) {
             return Ok(await _vendorService.GetVendorById(id));
         }
 

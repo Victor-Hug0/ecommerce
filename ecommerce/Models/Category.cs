@@ -1,8 +1,10 @@
 ﻿namespace ecommerce.Models {
-    public class Category {
-        private int Id { get; set; }
-        private string Name { get; set; }
-        private string Description { get; set; }
-        public virtual ICollection<Product> Products { get; set; }
+    public enum Category {
+        Electronics = 1,
+        Clothing = 2,
+        HomeAppliances = 3,
+        Books = 4,
+        Toys = 5,
+        Sports = 6
     }
 }

@@ -1,13 +1,23 @@
-﻿namespace ecommerce.Models {
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace ecommerce.Models {
+    [Table("shippingaddresses")]
     public class ShippingAddress {
-        private int Id { get; set; }
-        private int ClientId { get; set; }
-        private string street { get; set; }
-        private string city { get; set; }
-        private string state { get; set; }
-        private string zipcode { get; set; }
-        private string number { get; set; }
-        private string complement { get; set; }
-        public virtual Client Client { get; set; }
+        public long Id { get; set; }
+        public string Street { get; set; }
+        public string Number { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        public string ZipCode { get; set; }
+        public string Complement { get; set; }
+
+        public ShippingAddress(string street, string number, string city, string state, string zipCode, string complement) {
+            Street = street;
+            Number = number;
+            City = city;
+            State = state;
+            ZipCode = zipCode;
+            Complement = complement;
+        }
     }
 }

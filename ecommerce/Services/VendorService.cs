@@ -13,18 +13,20 @@ namespace ecommerce.Services {
         }
 
         public async Task<Vendor> CreateVendor(CreateVendorRequestDTO vendorDTO) {
-            var vendor = new Vendor {
-                Name = vendorDTO.Name,
-                Email = vendorDTO.Email,
-                PhoneNumber = vendorDTO.PhoneNumber
-            };
+            var vendor = new Vendor(vendorDTO.Name, vendorDTO.Email, vendorDTO.PhoneNumber);
+
+            bool emailExists = await _context.Vendors.AnyAsync(v => v.Email == vendorDTO.Email);
+
+            if (emailExists) {
+                return null;
+            }
 
             _context.Vendors.Add(vendor);
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
             return vendor;
         }
 
-        public async Task<Vendor> GetVendorById(int id) {
+        public async Task<Vendor> GetVendorById(long id) {
             return await _context.Vendors.FindAsync(id);
         }
 

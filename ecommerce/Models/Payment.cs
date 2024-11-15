@@ -1,12 +1,25 @@
-﻿namespace ecommerce.Models {
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace ecommerce.Models {
+    [Table("payments")]
     public class Payment {
-        private int id { get; set; }
-        private int OrderId { get; set; }
-        private string Method { get; set; }
-        private string Status {  get; set; }
-        private DateTime PaymentDate { get; set; }
-        private decimal Tax { get; set; }
-        private decimal TotalAmountPaid { get; set; }
+        public long Id { get; set; }
+        public long OrderId { get; set; }
+        public string Method { get; set; }
+        [Column("Status")]
+        public PaymentStatus PaymentStatus { get; set; }
+        public DateTime PaymentDate { get; set; }
+        public decimal Tax { get; set; }
+        public decimal TotalAmountPaid { get; set; }
         public virtual Order Order { get; set; }
+
+        public Payment(long orderId, string method, PaymentStatus paymentStatus, decimal tax, decimal totalAmountPaid) {
+            OrderId = orderId;
+            Method = method;
+            PaymentStatus = paymentStatus;
+            PaymentDate = DateTime.UtcNow;
+            Tax = tax;
+            TotalAmountPaid = totalAmountPaid;
+        }
     }
 }

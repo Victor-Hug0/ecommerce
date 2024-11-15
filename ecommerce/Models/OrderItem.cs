@@ -1,12 +1,24 @@
-﻿namespace ecommerce.Models {
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+
+namespace ecommerce.Models {
+    [Table("orderitems")]
     public class OrderItem {
-        private int Id { get; set; }
-        private int OrderId { get; set; }
-        private int ProductId { get; set; }
-        private int Quantity { get; set; }
-        private decimal UnitPrice { get; set; }
-        private decimal SubTotalPrice => Quantity * UnitPrice;
+        public long Id { get; set; }
+        public long OrderId { get; set; }
+        public long ProductId { get; set; }
+        public int Quantity { get; set; }
+        public decimal UnitPrice { get; set; }
+        public decimal SubTotalPrice => Quantity * UnitPrice;
+        [JsonIgnore]
         public virtual Order Order { get; set; }
+        [JsonIgnore]
         public virtual Product Product { get; set; }
+
+        public OrderItem(long productId, int quantity, decimal unitPrice) {
+            ProductId = productId;
+            Quantity = quantity;
+            UnitPrice = unitPrice;
+        }
     }
 }
