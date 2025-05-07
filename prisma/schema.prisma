@@ -22,6 +22,7 @@ model Customer {
   password String
   birth_date DateTime
   phone_number String
+  gender Gender
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
   addresses Customer_Address[]
@@ -52,4 +53,10 @@ model Customer_Address {
 
   @@id([customer_id, address_id])
   @@map("customer_addresses")
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER 
 }
