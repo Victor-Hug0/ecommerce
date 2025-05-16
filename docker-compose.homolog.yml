@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:17-alpine
+    restart: always
+    container_name: ecommerce-dev
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=${DB_HOMOLOG_USER}
+      - POSTGRES_PASSWORD=${DB_HOMOLOG_PASS}
+      - POSTGRES_DB=${DB_HOMOLOG_NAME}
+    volumes:
+      - pg_ecommerce_homolog_data:/var/lib/postgresql/data
+
+volumes:
+  pg_ecommerce_homolog_data:
