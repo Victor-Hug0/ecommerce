@@ -24,6 +24,8 @@ public class Customer {
     @Convert(converter = PhoneNumberConverter.class)
     @Column(name = "phone_number")
     private PhoneNumber phoneNumber;
+    @Convert(converter = BirthDateConverter.class)
+    private BirthDate birthDate;
     @Enumerated(EnumType.STRING)
     private Gender gender;
     @Column(name = "created_at")
