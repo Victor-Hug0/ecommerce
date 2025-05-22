@@ -4,14 +4,14 @@ import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
 @Converter(autoApply = true)
-public class EmailConverter implements AttributeConverter<Email, String> {
+public class EmailConverter implements AttributeConverter<EmailAddress, String> {
     @Override
-    public String convertToDatabaseColumn(Email email) {
+    public String convertToDatabaseColumn(EmailAddress email) {
         return email != null ? email.value() : null;
     }
 
     @Override
-    public Email convertToEntityAttribute(String s) {
-        return s != null ? new Email(s) : null;
+    public EmailAddress convertToEntityAttribute(String s) {
+        return s != null ? new EmailAddress(s) : null;
     }
 }

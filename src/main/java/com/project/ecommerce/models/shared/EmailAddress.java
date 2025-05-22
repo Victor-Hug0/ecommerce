@@ -2,9 +2,9 @@ package com.project.ecommerce.models.shared;
 
 import java.util.Objects;
 
-public record Email(String value) {
+public record EmailAddress(String value) {
 
-    public Email {
+    public EmailAddress {
         if (!isValid(value)) throw new IllegalArgumentException("Invalid email");
     }
 
@@ -16,7 +16,7 @@ public record Email(String value) {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        Email email = (Email) o;
+        EmailAddress email = (EmailAddress) o;
         return Objects.equals(value, email.value);
     }
 
