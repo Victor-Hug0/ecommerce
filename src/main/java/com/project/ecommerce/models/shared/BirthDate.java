@@ -1,14 +1,19 @@
 package com.project.ecommerce.models.shared;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.project.ecommerce.exception.InvalidBirthDateException;
+
 import java.time.LocalDate;
 import java.util.Objects;
 
 public record BirthDate(LocalDate value) {
 
-    public BirthDate {
-        if (value == null) throw new IllegalArgumentException("Invalid birth date");
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public BirthDate(@JsonProperty("value") LocalDate value) {
+        if (value == null || value.isAfter(LocalDate.now())) throw new InvalidBirthDateException("Invalid birth date");
 
-        if (value.isAfter(LocalDate.now())) throw new IllegalArgumentException("Invalid birth date");
+        this.value = value;
     }
 
     @Override

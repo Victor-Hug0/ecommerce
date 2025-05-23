@@ -1,5 +1,6 @@
 package com.project.ecommerce.service;
 
+import com.project.ecommerce.exception.CpfAlreadyExistsException;
 import com.project.ecommerce.exception.EmailAlreadyExistsException;
 import com.project.ecommerce.exception.InvalidPasswordException;
 import com.project.ecommerce.models.customer.CreateCustomerRequestDTO;
@@ -10,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.time.LocalDateTime;
 
 @Service
 public class CustomerService {
@@ -27,8 +30,12 @@ public class CustomerService {
             throw new InvalidPasswordException("Password and confirmation do not match.");
         }
 
-        if (customerRepository.findByEmail(dto.email())){
+        if (customerRepository.existsByEmail(dto.email())){
             throw new EmailAlreadyExistsException("Email already exists.");
+        }
+
+        if (customerRepository.existsByCpf(dto.cpf())) {
+            throw new CpfAlreadyExistsException("CPF already exists.");
         }
 
         String hashPassword = bCryptPasswordEncoder.encode(dto.password());
@@ -40,7 +47,9 @@ public class CustomerService {
                 hashPassword,
                 dto.phoneNumber(),
                 dto.birthDate(),
-                dto.gender()
+                dto.gender(),
+                LocalDateTime.now(),
+                LocalDateTime.now()
         );
 
         Customer savedCustomer = customerRepository.save(customer);

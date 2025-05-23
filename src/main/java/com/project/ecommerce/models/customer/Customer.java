@@ -34,10 +34,7 @@ public class Customer {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    public Customer() {
-    }
-
-    public Customer(String firstName, String lastName, CPF cpf, EmailAddress email, String password, PhoneNumber phoneNumber, BirthDate birthDate, Gender gender) {
+    public Customer(String firstName, String lastName, CPF cpf, EmailAddress email, String password, PhoneNumber phoneNumber, BirthDate birthDate, Gender gender, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.cpf = cpf;
@@ -46,6 +43,12 @@ public class Customer {
         this.phoneNumber = phoneNumber;
         this.birthDate = birthDate;
         this.gender = gender;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
+    public Customer() {
+
     }
 
     public UUID getId() {
@@ -114,5 +117,13 @@ public class Customer {
 
     public void setGender(Gender gender) {
         this.gender = gender;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

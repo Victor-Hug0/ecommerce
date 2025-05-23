@@ -1,11 +1,17 @@
 package com.project.ecommerce.models.shared;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.project.ecommerce.exception.InvalidCpfException;
+
 import java.util.Objects;
 
 public record CPF(String value) {
 
-    public CPF {
-        if (!isValidCPF(value)) throw new IllegalArgumentException("Invalid CPF");
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public CPF(@JsonProperty("value") String value) {
+        if (!isValidCPF(value)) throw new InvalidCpfException("Invalid CPF");
+        this.value = value;
     }
 
     public boolean isValidCPF(String cpf) {

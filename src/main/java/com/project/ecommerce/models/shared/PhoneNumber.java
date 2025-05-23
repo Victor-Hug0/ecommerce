@@ -1,16 +1,22 @@
 package com.project.ecommerce.models.shared;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.project.ecommerce.exception.InvalidPhoneNumberException;
+
 import java.util.Objects;
 
 public record PhoneNumber(String value) {
 
-    public PhoneNumber {
-        if (!isValid(value)) throw new IllegalArgumentException("Invalid phone number");
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public PhoneNumber(@JsonProperty("value") String value) {
+        if (!isValid(value)) throw new InvalidPhoneNumberException("Invalid phone number");
+        this.value = value;
     }
 
 
-    private boolean isValid(String phoneNumber){
-        return phoneNumber.matches("^\\d{11}$\n");
+    private static boolean isValid(String phoneNumber){
+        return phoneNumber.matches("^\\d{11}$");
     }
 
     @Override

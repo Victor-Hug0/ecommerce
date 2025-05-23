@@ -1,11 +1,17 @@
 package com.project.ecommerce.models.shared;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.project.ecommerce.exception.InvalidEmailException;
+
 import java.util.Objects;
 
 public record EmailAddress(String value) {
 
-    public EmailAddress {
-        if (!isValid(value)) throw new IllegalArgumentException("Invalid email");
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public EmailAddress(@JsonProperty("value") String value) {
+        if (!isValid(value)) throw new InvalidEmailException("Invalid email");
+        this.value = value;
     }
 
     private boolean isValid(String email) {

@@ -1,13 +1,17 @@
 package com.project.ecommerce.repository;
 
 import com.project.ecommerce.models.customer.Customer;
+import com.project.ecommerce.models.shared.CPF;
 import com.project.ecommerce.models.shared.EmailAddress;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;
 
 public interface CustomerRepository extends JpaRepository<Customer, UUID> {
-    boolean findByEmail(@Email @NotBlank(message = "The field can´t be null, in blank or empty spaces!") EmailAddress email);
+    boolean existsByEmail(@Email @NotNull(message = "The field can´t be null, in blank or empty spaces!") EmailAddress email);
+
+    boolean existsByCpf(@NotNull(message = "The field can´t be null!") CPF cpf);
 }
