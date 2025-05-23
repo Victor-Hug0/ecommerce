@@ -7,6 +7,8 @@ import com.project.ecommerce.models.customer.CreateCustomerRequestDTO;
 import com.project.ecommerce.models.customer.Customer;
 import com.project.ecommerce.models.customer.CustomerResponseDTO;
 import com.project.ecommerce.repository.CustomerRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -54,14 +56,11 @@ public class CustomerService {
 
         Customer savedCustomer = customerRepository.save(customer);
 
-        return new CustomerResponseDTO(
-                savedCustomer.getId(),
-                savedCustomer.getFirstName(),
-                savedCustomer.getLastName(),
-                savedCustomer.getEmail().value(),
-                savedCustomer.getPhoneNumber().value(),
-                savedCustomer.getBirthDate().value(),
-                savedCustomer.getGender()
-        );
+        return CustomerResponseDTO.fromEntity(savedCustomer);
+    }
+
+    public Page<CustomerResponseDTO> getCustomers(Pageable pageable) {
+        return customerRepository.findAll(pageable)
+                .map(CustomerResponseDTO::fromEntity);
     }
 }

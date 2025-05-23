@@ -14,4 +14,17 @@ public record CustomerResponseDTO(
         LocalDate birthDate,
         Gender gender
 ) {
+
+    public static CustomerResponseDTO fromEntity(Customer customer) {
+        return new CustomerResponseDTO(
+                customer.getId(),
+                customer.getFirstName(),
+                customer.getLastName(),
+                customer.getEmail().value(),
+                customer.getPhoneNumber().value(),
+                customer.getBirthDate().value(),
+                customer.getGender()
+        );
+    }
+
 }

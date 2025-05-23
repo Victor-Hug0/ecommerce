@@ -4,12 +4,12 @@ import com.project.ecommerce.models.customer.CreateCustomerRequestDTO;
 import com.project.ecommerce.models.customer.CustomerResponseDTO;
 import com.project.ecommerce.service.CustomerService;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping("/customer")
@@ -26,6 +26,13 @@ public class CustomerController {
 
         CustomerResponseDTO customerResponseDTO = customerService.createCustomer(dto);
 
-        return new ResponseEntity<>(customerResponseDTO, HttpStatus.CREATED);
+        URI location = URI.create("/customer" + customerResponseDTO.id());
+
+        return ResponseEntity.created(location).body(customerResponseDTO);
+    }
+
+    @GetMapping
+    public Page<CustomerResponseDTO> getCustomers(Pageable pageable) {
+        return customerService.getCustomers(pageable);
     }
 }
