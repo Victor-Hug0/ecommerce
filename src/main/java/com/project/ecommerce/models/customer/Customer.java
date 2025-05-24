@@ -2,13 +2,18 @@ package com.project.ecommerce.models.customer;
 
 import com.project.ecommerce.models.shared.*;
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Table(name = "customers")
-public class Customer {
+public class Customer implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -29,12 +34,15 @@ public class Customer {
     private BirthDate birthDate;
     @Enumerated(EnumType.STRING)
     private Gender gender;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    private UserRole userRole;
     @Column(name = "created_at")
     private LocalDateTime createdAt;
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    public Customer(String firstName, String lastName, CPF cpf, EmailAddress email, String password, PhoneNumber phoneNumber, BirthDate birthDate, Gender gender, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Customer(String firstName, String lastName, CPF cpf, EmailAddress email, String password, PhoneNumber phoneNumber, BirthDate birthDate, Gender gender, UserRole userRole, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.cpf = cpf;
@@ -43,6 +51,7 @@ public class Customer {
         this.phoneNumber = phoneNumber;
         this.birthDate = birthDate;
         this.gender = gender;
+        this.userRole = userRole;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -119,8 +128,38 @@ public class Customer {
         this.gender = gender;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_CUSTOMER"));
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email.value();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
     public void setPassword(String password) {

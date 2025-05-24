@@ -71,4 +71,10 @@ public class GlobalExceptionHandler {
         ErrorResponseDTO errorResponse = new ErrorResponseDTO(HttpStatus.BAD_REQUEST.value(), e.getMessage(), request.getRequestURI(), LocalDateTime.now());
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(GenerationTokenException.class)
+    public ResponseEntity<ErrorResponseDTO> handleGenerationTokenException(GenerationTokenException e, HttpServletRequest request) {
+        ErrorResponseDTO errorResponse = new ErrorResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage(), request.getRequestURI(), LocalDateTime.now());
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

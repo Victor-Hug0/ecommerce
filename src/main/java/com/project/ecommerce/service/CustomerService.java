@@ -5,12 +5,14 @@ import com.project.ecommerce.exception.CustomerNotFoundException;
 import com.project.ecommerce.exception.EmailAlreadyExistsException;
 import com.project.ecommerce.exception.InvalidPasswordException;
 import com.project.ecommerce.models.customer.*;
+import com.project.ecommerce.models.shared.UserRole;
 import com.project.ecommerce.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -21,14 +23,18 @@ import java.util.UUID;
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final CustomerPatchMapper customerPatchMapper;
+    private final PasswordEncoder passwordEncoder;
 
-    public CustomerService(CustomerRepository customerRepository, CustomerPatchMapper customerPatchMapper) {
+    @Autowired
+    public CustomerService(CustomerRepository customerRepository,
+                           CustomerPatchMapper customerPatchMapper,
+                           PasswordEncoder passwordEncoder) {
         this.customerRepository = customerRepository;
-        this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
         this.customerPatchMapper = customerPatchMapper;
+        this.passwordEncoder = passwordEncoder;
     }
+
 
     public CustomerResponseDTO createCustomer(CreateCustomerRequestDTO dto) {
         if (!dto.password().equals(dto.passwordConfirmation())) {
@@ -43,7 +49,7 @@ public class CustomerService {
             throw new CpfAlreadyExistsException("CPF already exists.");
         }
 
-        String hashPassword = bCryptPasswordEncoder.encode(dto.password());
+        String hashPassword = passwordEncoder.encode(dto.password());
         Customer customer = new Customer(
                 dto.firstName(),
                 dto.lastName(),
@@ -53,6 +59,7 @@ public class CustomerService {
                 dto.phoneNumber(),
                 dto.birthDate(),
                 dto.gender(),
+                UserRole.CUSTOMER,
                 LocalDateTime.now(),
                 LocalDateTime.now()
         );
