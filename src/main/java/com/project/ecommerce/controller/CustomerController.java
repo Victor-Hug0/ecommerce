@@ -26,7 +26,7 @@ public class CustomerController {
 
         CustomerResponseDTO customerResponseDTO = customerService.createCustomer(dto);
 
-        URI location = URI.create("/customer" + customerResponseDTO.id());
+        URI location = URI.create("/customer/" + customerResponseDTO.id());
 
         return ResponseEntity.created(location).body(customerResponseDTO);
     }
@@ -34,5 +34,11 @@ public class CustomerController {
     @GetMapping
     public Page<CustomerResponseDTO> getCustomers(Pageable pageable) {
         return customerService.getCustomers(pageable);
+    }
+    
+    @GetMapping("{id}")
+    public ResponseEntity<CustomerResponseDTO> getCustomerById(@PathVariable String id) {
+        URI location = URI.create("/customer/" + id);
+        return ResponseEntity.created(location).body(customerService.getCustomerById(id));
     }
 }

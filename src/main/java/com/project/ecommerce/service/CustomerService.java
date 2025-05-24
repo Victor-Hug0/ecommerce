@@ -1,6 +1,7 @@
 package com.project.ecommerce.service;
 
 import com.project.ecommerce.exception.CpfAlreadyExistsException;
+import com.project.ecommerce.exception.CustomerNotFoundException;
 import com.project.ecommerce.exception.EmailAlreadyExistsException;
 import com.project.ecommerce.exception.InvalidPasswordException;
 import com.project.ecommerce.models.customer.CreateCustomerRequestDTO;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 public class CustomerService {
@@ -62,5 +64,11 @@ public class CustomerService {
     public Page<CustomerResponseDTO> getCustomers(Pageable pageable) {
         return customerRepository.findAll(pageable)
                 .map(CustomerResponseDTO::fromEntity);
+    }
+
+    public CustomerResponseDTO getCustomerById(String id) {
+        Customer customer = customerRepository.findById(UUID.fromString(id))
+                .orElseThrow(() -> new CustomerNotFoundException("Customer not found!"));
+        return CustomerResponseDTO.fromEntity(customer);
     }
 }
