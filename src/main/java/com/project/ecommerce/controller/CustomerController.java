@@ -50,4 +50,10 @@ public class CustomerController {
         URI location = URI.create("/customer/" + customerResponseDTO.id());
         return ResponseEntity.created(location).body(customerResponseDTO);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCustomer(@PathVariable UUID id) {
+        customerService.deleteCustomer(id);
+        return ResponseEntity.noContent().build();
+    }
 }

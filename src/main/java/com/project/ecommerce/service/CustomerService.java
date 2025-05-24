@@ -82,4 +82,11 @@ public class CustomerService {
 
         return CustomerResponseDTO.fromEntity(customer);
     }
+
+    public void deleteCustomer(UUID id) {
+        Customer customer = customerRepository.findById(id)
+                .orElseThrow(() -> new CustomerNotFoundException("Customer not found!"));
+
+        customerRepository.delete(customer);
+    }
 }
