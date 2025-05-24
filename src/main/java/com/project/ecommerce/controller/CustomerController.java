@@ -2,6 +2,7 @@ package com.project.ecommerce.controller;
 
 import com.project.ecommerce.models.customer.CreateCustomerRequestDTO;
 import com.project.ecommerce.models.customer.CustomerResponseDTO;
+import com.project.ecommerce.models.customer.UpdateCustomerRequestDTO;
 import com.project.ecommerce.service.CustomerService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/customer")
@@ -36,9 +38,16 @@ public class CustomerController {
         return customerService.getCustomers(pageable);
     }
     
-    @GetMapping("{id}")
-    public ResponseEntity<CustomerResponseDTO> getCustomerById(@PathVariable String id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<CustomerResponseDTO> getCustomerById(@PathVariable UUID id) {
         URI location = URI.create("/customer/" + id);
         return ResponseEntity.created(location).body(customerService.getCustomerById(id));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<CustomerResponseDTO> updateCustomer(@PathVariable UUID id, @Valid @RequestBody UpdateCustomerRequestDTO dto) {
+        CustomerResponseDTO customerResponseDTO = customerService.updateCustomer(id, dto);
+        URI location = URI.create("/customer/" + customerResponseDTO.id());
+        return ResponseEntity.created(location).body(customerResponseDTO);
     }
 }

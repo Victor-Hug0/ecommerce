@@ -4,10 +4,9 @@ import com.project.ecommerce.exception.CpfAlreadyExistsException;
 import com.project.ecommerce.exception.CustomerNotFoundException;
 import com.project.ecommerce.exception.EmailAlreadyExistsException;
 import com.project.ecommerce.exception.InvalidPasswordException;
-import com.project.ecommerce.models.customer.CreateCustomerRequestDTO;
-import com.project.ecommerce.models.customer.Customer;
-import com.project.ecommerce.models.customer.CustomerResponseDTO;
+import com.project.ecommerce.models.customer.*;
 import com.project.ecommerce.repository.CustomerRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -23,10 +22,12 @@ public class CustomerService {
 
     private final CustomerRepository customerRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final CustomerPatchMapper customerPatchMapper;
 
-    public CustomerService(CustomerRepository customerRepository) {
+    public CustomerService(CustomerRepository customerRepository, CustomerPatchMapper customerPatchMapper) {
         this.customerRepository = customerRepository;
         this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        this.customerPatchMapper = customerPatchMapper;
     }
 
     public CustomerResponseDTO createCustomer(CreateCustomerRequestDTO dto) {
@@ -66,9 +67,19 @@ public class CustomerService {
                 .map(CustomerResponseDTO::fromEntity);
     }
 
-    public CustomerResponseDTO getCustomerById(String id) {
-        Customer customer = customerRepository.findById(UUID.fromString(id))
+    public CustomerResponseDTO getCustomerById(UUID id) {
+        Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new CustomerNotFoundException("Customer not found!"));
+        return CustomerResponseDTO.fromEntity(customer);
+    }
+
+    public CustomerResponseDTO updateCustomer(UUID id, UpdateCustomerRequestDTO dto) {
+        Customer customer = customerRepository.findById(id)
+                .orElseThrow(() -> new CustomerNotFoundException("Customer not found!"));
+
+        customerPatchMapper.updateCustomerFromDto(dto, customer);
+        customerRepository.save(customer);
+
         return CustomerResponseDTO.fromEntity(customer);
     }
 }
