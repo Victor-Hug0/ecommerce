@@ -1,5 +1,6 @@
 package com.project.ecommerce.models.customer;
 
+import com.project.ecommerce.models.address.CustomerAddress;
 import com.project.ecommerce.models.shared.*;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -37,6 +38,8 @@ public class Customer implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private UserRole userRole;
+    @OneToMany(mappedBy = "customer")
+    private List<CustomerAddress> customerAddresses;
     @Column(name = "created_at")
     private LocalDateTime createdAt;
     @Column(name = "updated_at")
@@ -58,6 +61,10 @@ public class Customer implements UserDetails {
 
     public Customer() {
 
+    }
+
+    public UserRole getUserRole() {
+        return userRole;
     }
 
     public UUID getId() {
