@@ -35,6 +35,7 @@ public class SecurityConfig {
                         .requestMatchers((HttpMethod.GET), "/customer/**" ).hasRole("CUSTOMER")
                         .requestMatchers((HttpMethod.PATCH), "/customer/**" ).hasRole("CUSTOMER")
                         .requestMatchers((HttpMethod.DELETE), "/customer/**" ).hasRole("CUSTOMER")
+                        .requestMatchers((HttpMethod.PUT), "/customer/address" ).hasRole("CUSTOMER")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

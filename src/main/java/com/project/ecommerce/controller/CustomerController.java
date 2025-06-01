@@ -2,6 +2,7 @@ package com.project.ecommerce.controller;
 
 import com.project.ecommerce.infra.security.TokenResponseDTO;
 import com.project.ecommerce.infra.security.TokenService;
+import com.project.ecommerce.models.address.AddressDTO;
 import com.project.ecommerce.models.customer.*;
 import com.project.ecommerce.service.CustomerService;
 import jakarta.validation.Valid;
@@ -71,5 +72,11 @@ public class CustomerController {
     public ResponseEntity<Void> deleteCustomer(@PathVariable UUID id) {
         customerService.deleteCustomer(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/address")
+    public ResponseEntity<CustomerResponseDTO> vinculateAddress(@RequestBody @Valid AddressDTO dto) {
+        CustomerResponseDTO customerResponseDTO = customerService.vinculateAddress(dto);
+        return ResponseEntity.ok(customerResponseDTO);
     }
 }

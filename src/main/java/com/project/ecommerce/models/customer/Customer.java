@@ -8,6 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -19,30 +20,35 @@ public class Customer implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    @Column(name = "first_name")
+    @Column(name = "first_name", nullable = false)
     private String firstName;
-    @Column(name = "last_name")
+    @Column(name = "last_name", nullable = false)
     private String lastName;
     @Convert(converter = CPFConverter.class)
+    @Column(nullable = false, unique = true)
     private CPF cpf;
     @Convert(converter = EmailConverter.class)
+    @Column(nullable = false, unique = true)
     private EmailAddress email;
+    @Column(nullable = false)
     private String password;
     @Convert(converter = PhoneNumberConverter.class)
-    @Column(name = "phone_number")
+    @Column(name = "phone_number", nullable = false)
     private PhoneNumber phoneNumber;
     @Convert(converter = BirthDateConverter.class)
+    @Column(nullable = false)
     private BirthDate birthDate;
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Gender gender;
     @Enumerated(EnumType.STRING)
-    @Column(name = "role")
+    @Column(name = "role", nullable = false)
     private UserRole userRole;
     @OneToMany(mappedBy = "customer")
-    private List<CustomerAddress> customerAddresses;
-    @Column(name = "created_at")
+    private List<CustomerAddress> customerAddresses = new ArrayList<>();
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
-    @Column(name = "updated_at")
+    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
     public Customer(String firstName, String lastName, CPF cpf, EmailAddress email, String password, PhoneNumber phoneNumber, BirthDate birthDate, Gender gender, UserRole userRole, LocalDateTime createdAt, LocalDateTime updatedAt) {
@@ -65,6 +71,10 @@ public class Customer implements UserDetails {
 
     public UserRole getUserRole() {
         return userRole;
+    }
+
+    public List<CustomerAddress> getCustomerAddresses() {
+        return customerAddresses;
     }
 
     public UUID getId() {

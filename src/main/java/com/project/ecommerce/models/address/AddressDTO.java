@@ -17,4 +17,15 @@ public record AddressDTO(
         @NotBlank
         String number
 ) {
+        public static AddressDTO fromEntity(Address address) {
+                return new AddressDTO(
+                        address.getZipcode(),
+                        address.getState(),
+                        address.getCity(),
+                        address.getNeighborhood(),
+                        address.getStreet(),
+                        address.getComplement(),
+                        address.getNumber()
+                );
+        }
 }

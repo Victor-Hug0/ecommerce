@@ -1,9 +1,14 @@
 package com.project.ecommerce.models.customer;
 
+import com.project.ecommerce.models.address.AddressDTO;
+import com.project.ecommerce.models.address.CustomerAddress;
 import com.project.ecommerce.models.shared.Gender;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public record CustomerResponseDTO(
         UUID id,
@@ -12,10 +17,16 @@ public record CustomerResponseDTO(
         String email,
         String phoneNumber,
         LocalDate birthDate,
-        Gender gender
+        Gender gender,
+        List<AddressDTO> addresses
 ) {
 
     public static CustomerResponseDTO fromEntity(Customer customer) {
+        List<AddressDTO> addressDTOS = customer.getCustomerAddresses().stream()
+                .map(CustomerAddress::getAddress)
+                .map(AddressDTO::fromEntity)
+                .toList();
+
         return new CustomerResponseDTO(
                 customer.getId(),
                 customer.getFirstName(),
@@ -23,7 +34,8 @@ public record CustomerResponseDTO(
                 customer.getEmail().value(),
                 customer.getPhoneNumber().value(),
                 customer.getBirthDate().value(),
-                customer.getGender()
+                customer.getGender(),
+                addressDTOS
         );
     }
 

@@ -4,17 +4,18 @@ import com.project.ecommerce.exception.CpfAlreadyExistsException;
 import com.project.ecommerce.exception.CustomerNotFoundException;
 import com.project.ecommerce.exception.EmailAlreadyExistsException;
 import com.project.ecommerce.exception.InvalidPasswordException;
+import com.project.ecommerce.models.address.Address;
+import com.project.ecommerce.models.address.AddressDTO;
 import com.project.ecommerce.models.customer.*;
 import com.project.ecommerce.models.shared.UserRole;
+import com.project.ecommerce.repository.AddressRepository;
 import com.project.ecommerce.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -25,14 +26,18 @@ public class CustomerService {
     private final CustomerRepository customerRepository;
     private final CustomerPatchMapper customerPatchMapper;
     private final PasswordEncoder passwordEncoder;
+    private final CustomerAddressService customerAddressService;
 
     @Autowired
     public CustomerService(CustomerRepository customerRepository,
                            CustomerPatchMapper customerPatchMapper,
-                           PasswordEncoder passwordEncoder) {
+                           PasswordEncoder passwordEncoder,
+                           AddressRepository addressRepository,
+                           CustomerAddressService customerAddressService) {
         this.customerRepository = customerRepository;
         this.customerPatchMapper = customerPatchMapper;
         this.passwordEncoder = passwordEncoder;
+        this.customerAddressService = customerAddressService;
     }
 
 
@@ -95,5 +100,19 @@ public class CustomerService {
                 .orElseThrow(() -> new CustomerNotFoundException("Customer not found!"));
 
         customerRepository.delete(customer);
+    }
+
+    public CustomerResponseDTO vinculateAddress(AddressDTO dto){
+        Customer customer = getAuthenticatedCustomer();
+
+        customerAddressService.createCustomerAddress(customer, dto);
+        customer = customerRepository.findById(customer.getId())
+                .orElseThrow(() -> new CustomerNotFoundException("Customer not found!"));
+
+        return CustomerResponseDTO.fromEntity(customer);
+    }
+
+    public Customer getAuthenticatedCustomer() {
+        return (Customer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 }

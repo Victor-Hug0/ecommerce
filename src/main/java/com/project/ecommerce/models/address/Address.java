@@ -9,21 +9,27 @@ import java.util.Objects;
 public class Address {
 
     @Id @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private int id;
-    @Column(name = "zip_code")
+    private Long id;
+    @Column(name = "zip_code", nullable = false)
     private String zipcode;
+    @Column(nullable = false)
     private String state;
+    @Column(nullable = false)
     private String city;
+    @Column(nullable = false)
     private String neighborhood;
+    @Column(nullable = false)
     private String street;
     private String complement;
+    @Column(nullable = false)
     private String number;
 
-    public Address(String zipcode, String state, String city, String neighborhood, String street, String number) {
+    public Address(String zipcode, String state, String city, String neighborhood, String complement, String street, String number) {
         this.zipcode = zipcode;
         this.state = state;
         this.city = city;
         this.neighborhood = neighborhood;
+        this.complement = complement;
         this.street = street;
         this.number = number;
     }
@@ -43,12 +49,8 @@ public class Address {
         return Objects.hash(id, zipcode, state, city, neighborhood, street, complement, number);
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getZipcode() {

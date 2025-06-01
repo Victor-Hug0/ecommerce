@@ -20,6 +20,7 @@ public class AddressService {
                 addressDTO.state(),
                 addressDTO.city(),
                 addressDTO.neighborhood(),
+                addressDTO.complement(),
                 addressDTO.street(),
                 addressDTO.number()
         );

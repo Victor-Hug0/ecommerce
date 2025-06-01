@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 public class CustomerAddress {
 
     @Id
-    private int id;
+    private Long id;
 
     @OneToOne
     @MapsId
@@ -18,4 +18,16 @@ public class CustomerAddress {
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
+
+    public CustomerAddress(Address address, Customer customer) {
+        this.address = address;
+        this.customer = customer;
+    }
+
+    public CustomerAddress() {
+    }
+
+    public Address getAddress() {
+        return address;
+    }
 }
